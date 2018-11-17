@@ -56,6 +56,7 @@ namespace FootballMatchResults.Dashboard.Models
         [JsonProperty("Country")]
         public Country Country { get; set; }
 
-       
+        [JsonProperty("League")]
+        public League League { get; set; }
     }
 }

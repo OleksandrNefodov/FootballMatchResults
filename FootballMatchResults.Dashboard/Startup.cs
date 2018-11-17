@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using FootballMatchResults.Dashboard.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +29,25 @@ namespace FootballMatchResults.Dashboard
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddCors();
+
+            ApplicationConfiguration configuration = Configuration.GetSection("ApplicationConfiguration")
+                .Get<ApplicationConfiguration>();
+
+            services.AddSingleton<IApplicationConfiguration, ApplicationConfiguration>(
+                e => configuration);
+
+        
+            var apiEndPoint = new Uri(configuration.FootballMatchResultsApiUrl);
+            var httpClient = new HttpClient
+            {
+                BaseAddress = apiEndPoint,
+            };
+
+            httpClient.DefaultRequestHeaders.Clear();  
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            services.AddSingleton<HttpClient>(httpClient);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,7 +60,20 @@ namespace FootballMatchResults.Dashboard
             else
             {
                 app.UseHsts();
+
             }
+            
+            app.UseStaticFiles();
+
+            ApplicationConfiguration configuration = Configuration.GetSection("ApplicationConfiguration")
+                .Get<ApplicationConfiguration>();
+
+            app.UseCors(builder =>
+            builder
+            .WithOrigins(configuration.FootballMatchResultsApiUrl)
+            .AllowAnyHeader()
+            );
+
 
             app.UseHttpsRedirection();
             app.UseMvc();

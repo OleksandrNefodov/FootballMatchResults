@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FootballMatchResults.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/results")]
     [ApiController]
     public class FootballMatchResultsController : ControllerBase
     {

@@ -25,7 +25,16 @@ namespace FootballMatchResults.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services
+            .AddCors(o => o.AddPolicy("MyPolicy", builder =>
+                {
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+
+                }))
+            .AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,8 +48,9 @@ namespace FootballMatchResults.Api
             {
                 app.UseHsts();
             }
-
-            app.UseHttpsRedirection();
+            
+            app.UseCors("MyPolicy");
+            app.UseStatusCodePages();
             app.UseMvc();
         }
     }

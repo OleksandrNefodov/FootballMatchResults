@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FootballMatchResults.Dashboard.Controllers
 {
-    [Route("api/FootballMatchResults")]
+    [Route("api/Dashboard")]
     [ApiController]
     public class HomeController : Controller
     {
