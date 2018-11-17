@@ -24,7 +24,7 @@ namespace FootballMatchResults.Api.Helpers
             },
         };
 
-        public static List<MatchResult> ReadFromJsonFile(string path)
+        public static string ReadJsonFromFile(string path)
         {
             try
             {
@@ -33,18 +33,36 @@ namespace FootballMatchResults.Api.Helpers
                     using (StreamReader r = new StreamReader(path))
                     {
                         string json = r.ReadToEnd();
-                        return JsonConvert.DeserializeObject<List<MatchResult>>(json, Settings);                           
+
+                        return json;                                         
                     }
                 }
                 else 
                 {
                     Console.WriteLine($"{nameof(path)} is not a valid \"{path}\".");
-                    return new List<MatchResult>();
+                    return "";
                 }                   
             }catch(Exception ex)
             { 
                 Console.WriteLine($"Couldn't parse Json. Exception : { ex }");
                 throw;
+            }            
+        }
+
+        public static bool TryParseJson<T>(string json, out List<T> data) where T : class
+        {
+            data = default(List<T>);
+
+            try
+            {                
+                data = JsonConvert.DeserializeObject<List<T>>(json, Settings);
+
+                return true;
+            }
+            catch(JsonException ex)
+            {
+                Console.WriteLine($"Failed to parse {nameof(json)}. Json : \"{json}\". Exception \"{ex}\"");
+                return false;
             }
             
         }

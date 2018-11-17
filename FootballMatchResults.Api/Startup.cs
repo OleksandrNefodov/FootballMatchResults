@@ -51,15 +51,7 @@ namespace FootballMatchResults.Api
             else
             {
                 app.UseHsts();
-            }
-            
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), "Repository")),
-                RequestPath = "/StaticInMemoryData"
-            });
-
+            }            
 
             app.UseCors("MyPolicy");
             app.UseStatusCodePages();

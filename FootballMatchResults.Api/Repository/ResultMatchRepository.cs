@@ -12,22 +12,49 @@ namespace FootballMatchResults.Dashboard.Repository
     {                        
         private const string _filePath =  @"\Repository\Data.json"; 
         private static List<MatchResult> _results;
+
+        private static string _rawJsonData;
+
+        public string RawJsonData
+        {
+            get
+            {                               
+                if (string.IsNullOrWhiteSpace(_rawJsonData))
+                {
+                    var directory = Directory.GetCurrentDirectory();
+                    var path = directory += _filePath;
+                    
+                    _rawJsonData = JsonHelper.ReadJsonFromFile(path);
+                }
+
+                return _rawJsonData;
+            }
+         }
         public List<MatchResult> MatchResults { 
             get
             {                               
                 if (_results == null || _results.Count == 0)
                 {
-                    var directory = Directory.GetCurrentDirectory();
-                    var path = directory += _filePath;
-                    
-                    _results = JsonHelper.ReadFromJsonFile(path);
+
+                    bool success = JsonHelper.TryParseJson<MatchResult>(RawJsonData, out _results);
+
+                    if(success)
+                    {
+
+                    }
                 }
 
                 return _results;
             }
         }
 
-        public List<MatchResult> GetAllResults()
+        public string GetJsonRawResults()
+        {
+            return RawJsonData;
+        }
+
+
+        public List<MatchResult> GetMatchResults()
         {
             return MatchResults;
         }

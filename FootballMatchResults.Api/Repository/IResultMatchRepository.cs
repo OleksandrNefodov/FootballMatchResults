@@ -5,6 +5,7 @@ namespace FootballMatchResults.Dashboard.Repository
 {
     public interface IResultMatchRepository
     {
-        List<MatchResult> GetAllResults();
+        string GetJsonRawResults();
+        List<MatchResult> GetMatchResults();
     }
 }

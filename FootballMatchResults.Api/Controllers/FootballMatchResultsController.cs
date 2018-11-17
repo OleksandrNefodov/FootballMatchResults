@@ -18,12 +18,12 @@ namespace FootballMatchResults.Api.Controllers
         {
             _current = resultMatchRepository;
         }
-        
+
         // GET api/values
         [HttpGet]
         public ActionResult Get()
         {
-            var results = _current.GetAllResults();
+            var results = _current.GetJsonRawResults();
 
             return Ok(results);
         }    
