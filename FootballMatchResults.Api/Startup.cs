@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FootballMatchResults.Dashboard.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -26,6 +29,7 @@ namespace FootballMatchResults.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services
+            .AddSingleton<IResultMatchRepository, ResultMatchRepository>()
             .AddCors(o => o.AddPolicy("MyPolicy", builder =>
                 {
                     builder
@@ -49,6 +53,14 @@ namespace FootballMatchResults.Api
                 app.UseHsts();
             }
             
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "Repository")),
+                RequestPath = "/StaticInMemoryData"
+            });
+
+
             app.UseCors("MyPolicy");
             app.UseStatusCodePages();
             app.UseMvc();
