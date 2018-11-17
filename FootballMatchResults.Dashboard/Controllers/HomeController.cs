@@ -6,13 +6,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FootballMatchResults.Dashboard.Controllers
 {
-    public class HomeController : ControllerBase
+    [Route("api/FootballMatchResults")]
+    [ApiController]
+    public class HomeController : Controller
     {
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public IActionResult Index()
         {
-            return new string[] { "value1", "value2" };
-        }        
+            return View();
+        }
     }
 }

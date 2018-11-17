@@ -1,19 +1,29 @@
+using System;
+using Newtonsoft.Json;
+
 namespace FootballMatchResults.Dashboard.Models
 {
     public class Team
     {
-        public int Id { get; set;}
+        [JsonProperty("Id")]
+        public long Id { get; set; }
 
-        public string Name { get; set; }
+        [JsonProperty("Name")]
+        public TeamName Name { get; set; }
 
-        public string FullName { get; set; }
+        [JsonProperty("FullName")]
+        public TeamName FullName { get; set; }
 
-        public string Logo { get; set; }
+        [JsonProperty("Logo")]
+        public object Logo { get; set; }
 
-        public string LogoUrl { get; set; }
+        [JsonProperty("LogoUrl")]
+        public Uri LogoUrl { get; set; }
 
-        public int Ranking { get; set; }
+        [JsonProperty("Ranking")]
+        public long Ranking { get; set; }
 
+        [JsonProperty("Message")]
         public string Message { get; set; }
     }
 }
