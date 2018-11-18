@@ -1,34 +1,151 @@
 @inject FootballMatchResults.Dashboard.Configuration.IApplicationConfiguration appSettings;
+
 @{
     ViewData["Title"] = "FootballMatchResults";
     string apiUrl = appSettings.FootballMatchResultsApiUrl;
 }
-<div class="row">
-    <div class="col-md-9">
-        <table id="messages" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Teams</th>
-                    <th>Score</th>
-                </tr>
-            </thead>
-        </table>
-    </div>
-</div>
-<div class="row" style="margin: 0px">    
-    <button onclick="CallApi()">Test API call</button>    
-</div>
-<script>
-  function CallApi() {
-        var url = "@apiUrl" + "api/results/";
-        $.ajax({
-            url: url,
-            type: 'GET',
-            success: function (result) {
-                console.log("Api call works!!! :)");                
-            }
-        });
-    }
 
+
+<div class="row" style="margin-top: 15px;">
+    <div class="panel-group">
+        <div class="row">
+            <div class="col-xs-1">
+                <a data-toggle="collapse" href="#collapse1">Filters</a>
+            </div>
+            <div class="col-xs-10">
+                <div id="collapse1" class="panel-collapse collapse">
+                    <table border="0" cellspacing="15" cellpadding="15">
+                        <tbody>
+                            <tr>
+                                <td>Minimum Date:</td>
+                                <td><input name="min" id="min" type="text"></td>
+
+                                <td>Maximum Date:</td>
+                                <td><input name="max" id="max" type="text"></td>
+                            </tr>
+                        </tbody>
+                    </table>                 
+                </div>
+            </div>
+        </div>            
+    </div> 
+
+     
+<div class="col-md-20">
+    <table id="results" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0">
+        <thead>
+            <tr>
+                <th>MatchDate</th>
+                <th>HomeTeam</th>
+                <th>AwayTeam</th>
+                <!--<th>Score</th> -->
+                <!-- <th>Edit</th> -->
+            </tr>
+        </thead>
+    </table>
+</div>
+</div>
+
+<script type="text/javascript">        
+    $(document).ready(function () {
+         console.log("Hello");
+        $.fn.dataTable.ext.search.push(
+        function (settings, data, dataIndex) {
+            var min = $('#min').datepicker("getDate");
+            var max = $('#max').datepicker("getDate");
+            console.log(data[0]);
+            var startDate = new Date(data[0])
+             console.log(startDate);
+            if (min == null && max == null) { return true; }
+            if (min == null && startDate <= max) { return true;}
+            if(max == null && startDate >= min) {return true;}
+            if (startDate <= max && startDate >= min) { return true; }
+            return false;
+        }
+        );
+
+        $("#min").datepicker({ onSelect: function () { resultsTable.draw(); }, changeMonth: true, changeYear: true });
+        $("#max").datepicker({ onSelect: function () { resultsTable.draw(); }, changeMonth: true, changeYear: true });
+
+        resultsTable = $("#results").DataTable({
+                "processing": false,
+                "serverSide": false,
+                "filter": true,                
+                "orderMulti": false,
+                "pageLength": 10,
+                "ajax": {
+                    "url": "@apiUrl" + "api/results/",
+                    "type": "GET",
+                    "datatype": "json",
+                    "dataSrc": ''
+                },
+                "columnDefs":
+                    [
+                        {
+                            "targets": [0],
+                            "visible": true,
+                            "render": function (data, type, row) {
+                                var date = new Date(data);   
+                                                         
+                                return date.toLocaleString()
+                            }
+                        },
+                        {
+                            "targets": [1],
+                            "visible": true,
+                            "searchable": false,
+                            "render": function(data, type, full, meta) {
+                                var result = data = typeof data === 'string' && data.length > 30 ? data.substring(0, 30) + '...' : data;
+                                return result;
+                            }
+                        },
+                        {
+                            "targets": [2],
+                            "visible": true,
+                            "searchable": false,
+                            "render": function(data, type, full, meta) {
+                                var result = data = typeof data === 'string' && data.length > 30 ? data.substring(0, 30) + '...' : data;                         
+                                return result;
+                            }
+                        },          
+                        // {
+                        //     "targets": [2],
+                        //     "visible": true,
+                        //     "render": function (data, type, row) {
+                        //         return data;
+                        //     }
+                        // }, 
+                                                                   
+                    ],
+                "columns": [
+                    { "data": "MatchDate", "name": "MatchDate", "autoWidth": true },
+                    { "data": "HomeTeam.FullName", "name": "HomeTeam", "autoWidth": true },                                  
+                    { "data": "AwayTeam.FullName", "name": "AwayTeam", "autoWidth": true },
+
+                    // {
+                    // "render": function (data, type, full, meta) { return  '<img height="15%" width="7%" src="' + full.AwayTeam.LogoUrl + '"/>' }
+                    // },     
+                    
+                    // "columnDefs": [
+                    // {"render": (data, type, full) => {
+                    //     return $.map(full['HomeTeam'].concat(full['editor']), function ( d, i ) {
+                    //     return d.given +' '+ d.family;
+                    //     } ).join( ',<br />' );
+                    //     },
+                    //     "targets": [2] }
+                    // ] 
+                    // //  { "data": 0, "name": "Score", "autoWidth": true }, 
+                    // "render": function (data, type, full, meta) { return '<a class="btn btn-primary" href="/Edit?messageId=' + data. + '">Edit</a>'; }   
+                          
+                ]
+            })
+
+     
+       
+     
+        // Event listener to the two range filtering inputs to redraw on input
+        $('#min, #max').change(function () {
+            resultsTable.draw();
+        });
+    });    
 </script>

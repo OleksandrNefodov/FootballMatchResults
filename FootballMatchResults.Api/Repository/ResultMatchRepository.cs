@@ -35,7 +35,6 @@ namespace FootballMatchResults.Dashboard.Repository
             {                               
                 if (_results == null || _results.Count == 0)
                 {
-
                     bool success = JsonHelper.TryParseJson<MatchResult>(RawJsonData, out _results);
 
                     if(success)
