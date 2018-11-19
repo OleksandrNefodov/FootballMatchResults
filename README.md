@@ -35,7 +35,8 @@ Application logging use NLog package and logs to file. File folder location can 
 
 ### Get requests
 javascript example:
-```var settings = {
+```
+var settings = {
   "async": true,
   "crossDomain": true,
   "url": "https://localhost:5001/api/results",
