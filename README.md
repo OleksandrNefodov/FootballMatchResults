@@ -52,7 +52,26 @@ $.ajax(settings).done(function (response) {
 });
 ```
 ### POST requests
+javascript example:
+```
+var settings = {
+  "async": true,
+  "crossDomain": true,
+  "url": "https://localhost:5001/api/results",
+  "method": "POST",
+  "headers": {
+    "Content-Type": "application/json",
+    "cache-control": "no-cache",
+    "Postman-Token": "c74006e6-908b-4125-9107-f88711dccfc3"
+  },
+  "processData": false,
+  "data": "{\n\t\"StartDate\" : \"2014.02.01\",\n\t\"EndDate\" : \"2018.02.01\"\n}"
+}
 
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});
+```
 ## FootballMatchResults.Dashboard
 This project is a Web application using ASP.NET Core MVC framework.
 With this web application you can see the API in action.
