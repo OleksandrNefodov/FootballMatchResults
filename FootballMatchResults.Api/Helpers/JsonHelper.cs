@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using FootballMatchResults.Dashboard.Models;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -10,7 +11,14 @@ namespace FootballMatchResults.Api.Helpers
 {
     public class JsonHelper
     {
-        private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
+        private readonly ILogger<JsonHelper> _logger;
+
+        public JsonHelper(ILogger<JsonHelper> logger)
+        {
+            _logger = logger;
+        }
+        
+        private readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
             MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
             DateParseHandling = DateParseHandling.None,
@@ -24,45 +32,17 @@ namespace FootballMatchResults.Api.Helpers
             },
         };
 
-        public static string ReadJsonFromFile(string path)
+        public List<T> ParseJson<T>(string json) where T : class
         {
-            try
-            {
-                if(File.Exists(path)) 
-                {
-                    using (StreamReader r = new StreamReader(path))
-                    {
-                        string json = r.ReadToEnd();
-
-                        return json;                                         
-                    }
-                }
-                else 
-                {
-                    Console.WriteLine($"{nameof(path)} is not a valid \"{path}\".");
-                    return "";
-                }                   
-            }catch(Exception ex)
-            { 
-                Console.WriteLine($"Couldn't parse Json. Exception : { ex }");
-                throw;
-            }            
-        }
-
-        public static bool TryParseJson<T>(string json, out List<T> data) where T : class
-        {
-            data = default(List<T>);
-
             try
             {                
-                data = JsonConvert.DeserializeObject<List<T>>(json, Settings);
-
-                return true;
+                return JsonConvert.DeserializeObject<List<T>>(json, Settings);
             }
             catch(JsonException ex)
-            {
-                Console.WriteLine($"Failed to parse {nameof(json)}. Json : \"{json}\". Exception \"{ex}\"");
-                return false;
+            {           
+                _logger.LogError($"Failed to parse {nameof(json)}. Json : \"{json}\". Exception: {ex}");
+
+                throw;  
             }
             
         }

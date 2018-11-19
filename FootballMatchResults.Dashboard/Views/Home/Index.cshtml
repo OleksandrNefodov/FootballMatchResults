@@ -18,10 +18,13 @@
                         <tbody>
                             <tr>
                                 <td>Minimum Date:</td>
-                                <td><input name="min" id="min" type="text"></td>
+                                <td><input name="min" id="min" type="text" readonly></td>
 
                                 <td>Maximum Date:</td>
-                                <td><input name="max" id="max" type="text"></td>
+                                <td><input name="max" id="max" type="text" readonly></td>
+
+                                <td><button id="filter" class="btn btn-light" onclick="FetchFilteredData()" disabled>Filter</button></td>
+
                             </tr>
                         </tbody>
                     </table>                 
@@ -38,7 +41,7 @@
                 <th>MatchDate</th>
                 <th>HomeTeam</th>
                 <th>AwayTeam</th>
-                <!--<th>Score</th> -->
+                <th>Score</th>
                 <!-- <th>Edit</th> -->
             </tr>
         </thead>
@@ -46,28 +49,35 @@
 </div>
 </div>
 
-<script type="text/javascript">        
-    $(document).ready(function () {
-         console.log("Hello");
-        $.fn.dataTable.ext.search.push(
-        function (settings, data, dataIndex) {
-            var min = $('#min').datepicker("getDate");
-            var max = $('#max').datepicker("getDate");
-            console.log(data[0]);
-            var startDate = new Date(data[0])
-             console.log(startDate);
-            if (min == null && max == null) { return true; }
-            if (min == null && startDate <= max) { return true;}
-            if(max == null && startDate >= min) {return true;}
-            if (startDate <= max && startDate >= min) { return true; }
-            return false;
+<script type="text/javascript">      
+var FetchFilteredData = function(){
+    $.post({
+        url: "@apiUrl" + "api/results/",
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        data: JSON.stringify({startDate:  $("#min").datepicker("getDate"), endDate:  $("#max").datepicker("getDate")}),
+        success: function( data, textStatus, jQxhr ){
+            resultsTable.clear();
+            resultsTable.rows.add(data);
+            resultsTable.draw();
+        },
+        error: function( jqXhr, textStatus, errorThrown ){
         }
-        );
+    });
+}  
+    $(document).ready(function () {
+        // var d = new Date();
+        // var currMonth = d.getMonth();
+        // var currYear = d.getFullYear();
+        // var startDate = new Date(currYear, currMonth, 1);
+        // var endDate = startDate.setMonth(d.getMonth()-3);
 
-        $("#min").datepicker({ onSelect: function () { resultsTable.draw(); }, changeMonth: true, changeYear: true });
-        $("#max").datepicker({ onSelect: function () { resultsTable.draw(); }, changeMonth: true, changeYear: true });
-
-        resultsTable = $("#results").DataTable({
+        $("#min").datepicker({ changeMonth: true, changeYear: true});
+        $("#max").datepicker({ changeMonth: true, changeYear: true});
+        // $("#min").datepicker("setDate", startDate);
+        // $("#max").datepicker("setDate", endDate);
+        
+        resultsTable = $("#results").DataTable({         
                 "processing": false,
                 "serverSide": false,
                 "filter": true,                
@@ -78,74 +88,91 @@
                     "type": "GET",
                     "datatype": "json",
                     "dataSrc": ''
-                },
+                },   
+                "orderMulti": false,
+                "pageLength": 10,
                 "columnDefs":
                     [
                         {
                             "targets": [0],
                             "visible": true,
                             "render": function (data, type, row) {
-                                var date = new Date(data);   
-                                                         
-                                return date.toLocaleString()
+                                var date = new Date(data);    
+                                return date.toLocaleString();
                             }
                         },
+
+                        // The `data` parameter refers to the data for the cell (defined by the
+                        // `data` option, which defaults to the column being worked with, in
+                        // this case `data: 0`.
+                        {
+                            "render": function (data, type, full)
+                            { 
+                            
+                                return '<img height="15%" width="7%" src="' + full.AwayTeam.LogoUrl + '"/>' + ' ' + data
+                            },
+
+                            "targets": 1
+                        },
+                                                
                         {
                             "targets": [1],
                             "visible": true,
-                            "searchable": false,
+                            "searchable": true,
                             "render": function(data, type, full, meta) {
                                 var result = data = typeof data === 'string' && data.length > 30 ? data.substring(0, 30) + '...' : data;
                                 return result;
                             }
                         },
+
+                        {
+                            "render": function (data, type, full)
+                            { 
+                            
+                                return '<img height="15%" width="7%" src="' + full.HomeTeam.LogoUrl + '"/>' + ' ' + data
+                            },
+
+                            "targets": 2
+                        },
+
+
                         {
                             "targets": [2],
                             "visible": true,
-                            "searchable": false,
+                            "searchable": true,
                             "render": function(data, type, full, meta) {
                                 var result = data = typeof data === 'string' && data.length > 30 ? data.substring(0, 30) + '...' : data;                         
                                 return result;
                             }
                         },          
-                        // {
-                        //     "targets": [2],
-                        //     "visible": true,
-                        //     "render": function (data, type, row) {
-                        //         return data;
-                        //     }
-                        // }, 
-                                                                   
+                        {
+                            "targets": [3],
+                            "visible": true,
+                            "searchable": false,
+                            "render": function(data, type, full, meta) {
+                                var result = full.HomeGoals + " - " + full.AwayGoals;                    
+                                return result;
+                            }
+                        }                                                                   
                     ],
                 "columns": [
                     { "data": "MatchDate", "name": "MatchDate", "autoWidth": true },
-                    { "data": "HomeTeam.FullName", "name": "HomeTeam", "autoWidth": true },                                  
-                    { "data": "AwayTeam.FullName", "name": "AwayTeam", "autoWidth": true },
-
-                    // {
-                    // "render": function (data, type, full, meta) { return  '<img height="15%" width="7%" src="' + full.AwayTeam.LogoUrl + '"/>' }
-                    // },     
-                    
-                    // "columnDefs": [
-                    // {"render": (data, type, full) => {
-                    //     return $.map(full['HomeTeam'].concat(full['editor']), function ( d, i ) {
-                    //     return d.given +' '+ d.family;
-                    //     } ).join( ',<br />' );
-                    //     },
-                    //     "targets": [2] }
-                    // ] 
-                    // //  { "data": 0, "name": "Score", "autoWidth": true }, 
-                    // "render": function (data, type, full, meta) { return '<a class="btn btn-primary" href="/Edit?messageId=' + data. + '">Edit</a>'; }   
-                          
-                ]
+                    { "data": "HomeTeam.FullName", "name": "HomeTeam", "autoWidth": true },
+                    { "data": "AwayTeam.FullName", "name": "HomeTeam", "autoWidth": true },                                  
+                          ]
             })
 
-     
-       
-     
         // Event listener to the two range filtering inputs to redraw on input
         $('#min, #max').change(function () {
+            var min = $('#min').datepicker("getDate");
+            var max = $('#max').datepicker("getDate");
+
+            if(min != null && max != null)
+            {
+                $('#filter').removeAttr('disabled');
+            }
+
             resultsTable.draw();
         });
-    });    
+    }); 
 </script>
