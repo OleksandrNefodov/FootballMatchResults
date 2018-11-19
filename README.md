@@ -34,7 +34,7 @@ Dashboard and API are configured to listen different ports.
 Application logging use NLog package and logs to file. File folder location can be changed in NLog.config file in the project.
 
 ### Get requests
-var settings = {
+```var settings = {
   "async": true,
   "crossDomain": true,
   "url": "https://localhost:5001/api/results",
@@ -48,6 +48,7 @@ var settings = {
 $.ajax(settings).done(function (response) {
   console.log(response);
 });
+```
 ### POST requests
 
 ## FootballMatchResults.Dashboard
