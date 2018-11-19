@@ -42,4 +42,4 @@ With this web application you can see the API in action.
 In the UI you can execute all HTTP request methods mentioned above.
 
 ## MessageStore.API.Tests
-This xunit test project to test the MessageStore.API.
+This xunit test project to test the FootballMatchResults.API.
