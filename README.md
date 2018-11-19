@@ -25,7 +25,7 @@
 
 ## FootballMatchResults.API
 This project is a RESTful API that fetches football match results from external api.
-This API supports GET, POST request method. Get retruns all available match results on the resource.
+The API supports GET, POST request method. Get returns all available match results on the resource.
 Post - used for filtering data according to a date-range.
 Accepted Content-Type: application/json
 
