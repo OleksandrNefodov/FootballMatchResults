@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FootballMatchResults.Api.Models;
-using FootballMatchResults.Dashboard.Repository;
+using FootballMatchResults.Api.Repository;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -35,9 +35,9 @@ namespace FootballMatchResults.Api.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] FilterRequest request)
         {
-            if (request.startDate <= request.endDate)
+            if (request.StartDate <= request.EndDate)
             {
-                var results =  _current.GetMatchResults(request.startDate, request.endDate);
+                List<MatchResult> results =  _current.GetMatchResults(request.StartDate, request.EndDate);
 
                 return Ok(results);
             }

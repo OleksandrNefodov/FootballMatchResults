@@ -1,4 +1,4 @@
-namespace FootballMatchResults.Dashboard.Models
+namespace FootballMatchResults.Api.Models
 {
     public enum Country 
     { 

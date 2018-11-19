@@ -7,7 +7,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using FootballMatchResults.Api.Configuration;
 using FootballMatchResults.Api.Helpers;
-using FootballMatchResults.Dashboard.Repository;
+using FootballMatchResults.Api.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;

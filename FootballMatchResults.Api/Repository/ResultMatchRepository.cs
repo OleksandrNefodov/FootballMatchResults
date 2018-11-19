@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using FootballMatchResults.Api.Helpers;
-using FootballMatchResults.Dashboard.Models;
+using FootballMatchResults.Api.Models;
 using Microsoft.Extensions.Logging;
 
-namespace FootballMatchResults.Dashboard.Repository
+namespace FootballMatchResults.Api.Repository
 {
     public class ResultMatchRepository : IResultMatchRepository
     {             
@@ -71,7 +71,7 @@ namespace FootballMatchResults.Dashboard.Repository
 
             return RawJsonData;
         }
-        
+
         public List<MatchResult> GetMatchResults(DateTime start, DateTime end)
         {
             _logger.LogDebug($"{nameof(GetMatchResults)}."); 

@@ -1,6 +1,6 @@
 using System;
 using Newtonsoft.Json;
-using FootballMatchResults.Dashboard.Models;
+using FootballMatchResults.Api.Models;
 
 namespace FootballMatchResults.Api.Helpers
 {

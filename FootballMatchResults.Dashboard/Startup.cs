@@ -38,7 +38,6 @@ namespace FootballMatchResults.Dashboard
             services.AddSingleton<IApplicationConfiguration, ApplicationConfiguration>(
                 e => configuration);
 
-        
             var apiEndPoint = new Uri(configuration.FootballMatchResultsApiUrl);
             var httpClient = new HttpClient
             {
@@ -60,7 +59,6 @@ namespace FootballMatchResults.Dashboard
             else
             {
                 app.UseHsts();
-
             }
             
             app.UseStaticFiles();
@@ -73,7 +71,6 @@ namespace FootballMatchResults.Dashboard
             .WithOrigins(configuration.FootballMatchResultsApiUrl)
             .AllowAnyHeader()
             );
-
 
             app.UseHttpsRedirection();
             app.UseMvc();

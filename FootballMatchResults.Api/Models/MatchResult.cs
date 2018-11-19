@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace FootballMatchResults.Dashboard.Models
+namespace FootballMatchResults.Api.Models
 {
     public class MatchResult
     {

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using FootballMatchResults.Dashboard.Models;
+using FootballMatchResults.Api.Models;
 
-namespace FootballMatchResults.Dashboard.Repository
+namespace FootballMatchResults.Api.Repository
 {
     public interface IResultMatchRepository
     {

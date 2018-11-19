@@ -18,12 +18,12 @@
                         <tbody>
                             <tr>
                                 <td>Minimum Date:</td>
-                                <td><input name="min" id="min" type="text" readonly></td>
+                                <td><input class="form-control" name="min" id="min" type="text" readonly></td>
 
                                 <td>Maximum Date:</td>
-                                <td><input name="max" id="max" type="text" readonly></td>
+                                <td><input class="form-control" name="max" id="max" type="text" readonly></td>
 
-                                <td><button id="filter" class="btn btn-light" onclick="FetchFilteredData()" disabled>Filter</button></td>
+                                <td><button id="filter" class="btn btn-light" onclick="FetchFilteredData()" style="margin-left:5px;" disabled>Filter</button></td>
 
                             </tr>
                         </tbody>
@@ -55,7 +55,7 @@ var FetchFilteredData = function(){
         url: "@apiUrl" + "api/results/",
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
-        data: JSON.stringify({startDate:  $("#min").datepicker("getDate"), endDate:  $("#max").datepicker("getDate")}),
+        data: JSON.stringify({StartDate:  $("#min").datepicker("getDate"), EndDate:  $("#max").datepicker("getDate")}),
         success: function( data, textStatus, jQxhr ){
             resultsTable.clear();
             resultsTable.rows.add(data);
