@@ -77,5 +77,5 @@ This project is a Web application using ASP.NET Core MVC framework.
 With this web application you can see the API in action.
 In the UI you can execute all HTTP request methods mentioned above.
 
-## MessageStore.API.Tests
+## FootballMatchResults.API.Tests
 This xunit test project to test the FootballMatchResults.API.
