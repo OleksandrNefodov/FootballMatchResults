@@ -34,6 +34,7 @@ Dashboard and API are configured to listen different ports.
 Application logging use NLog package and logs to file. File folder location can be changed in NLog.config file in the project.
 
 ### Get requests
+javascript example:
 ```var settings = {
   "async": true,
   "crossDomain": true,
