@@ -50,6 +50,5 @@ namespace FootballMatchResults.Api.Tests
             List<MatchResult> realResults = okResult.Value as List<MatchResult>;
             Assert.True(realResults.Count > 0);
         }
-
     }
 }
